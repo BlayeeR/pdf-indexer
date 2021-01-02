@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fd04b196c374d5592de3c3f210e026d4",
+    "content-hash": "767f0bceb28b723354ec9a7564a4fd11",
     "packages": [
         {
             "name": "markbaker/matrix",
@@ -87,11 +87,7 @@
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": {
-        "ext-json": "*",
-        "ext-iconv": "*",
-        "ext-gd": "*"
-    },
+    "platform": [],
     "platform-dev": [],
     "plugin-api-version": "2.0.0"
 }

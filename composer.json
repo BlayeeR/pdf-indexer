@@ -1,8 +1,6 @@
 {
   "require": {
     "ext-json": "*",
-    "ext-iconv": "*",
-    "ext-gd": "*",
     "markbaker/matrix": "*"
   }
 }
