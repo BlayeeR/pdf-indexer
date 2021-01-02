@@ -1,4 +1,3 @@
 *.pdf
 vendor/
 debug.log
-composer.phar

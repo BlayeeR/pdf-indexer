@@ -3,7 +3,7 @@
 # Wymagania
   - PHP 8.0.0
   - Composer
-  - PHP mbstring extension
+  - Rozszerzenia PHP: mbstring, openssl
   - Ghostscript(do konwersji plików na wersję PDF 1.4)
   - QPDF(do dekodowania zawartości plików)
 
