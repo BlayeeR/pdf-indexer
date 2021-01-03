@@ -138,13 +138,13 @@ class Font extends PdfObject
             for ($i = 0; $i < strlen($text); $i += 1) {
                 $char = substr($text, $i, 1);
                 $translatedChar = $this->translateCharacter($char);
-                if ($translatedChar) {
+                if ($translatedChar !== false) {
                     $char = $translatedChar;
                 }
                 else {
                     $char = substr($text, $i, 2);
                     $translatedChar = $this->translateCharacter($char);
-                    if ($translatedChar) {
+                    if ($translatedChar !== false) {
                         $char = $translatedChar;
                         $i += 1;
                     }

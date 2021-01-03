@@ -5,7 +5,7 @@ require_once 'global.php';
 class PdfPageContent extends PdfObject {
 
     private PdfPage $page;
-    private float $searchRadius = 5;
+    private int $searchRadius = 15;
     private array $textArray;
     private string $rawText;
 
@@ -74,9 +74,9 @@ class PdfPageContent extends PdfObject {
                             if ($newXY['x'] <= 0 || $newXY['y'] < $oldXY['y']) {
                                 $text .= "\n";
                             }
-                            elseif ($newXY['x'] > $oldXY['x'] && $newXY['y'] != 0) {
-                                $text .= ' ';
-                            }
+//                            elseif ($newXY['x'] > $oldXY['x'] && $newXY['y'] == $oldXY['y']) {
+//                                $text .= ' ';
+//                            }
                             break;
                         case 'TD':
                             $args = preg_split('/\s/s', $command->getValue());
@@ -369,6 +369,14 @@ class PdfPageContent extends PdfObject {
         }
 
         return null;
+    }
+
+    /**
+     * @param int $searchRadius
+     */
+    public function setSearchRadius(int $searchRadius): void
+    {
+        $this->searchRadius = $searchRadius;
     }
 }
 
