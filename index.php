@@ -19,6 +19,11 @@
     if(array_key_exists("decimalRadius", $_POST) && is_numeric($_POST['decimalRadius'])) {
         $decimalRadius = (int)$_POST['decimalRadius'];
     }
+
+    $ghostscriptCommand = "gs";
+    if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+        $ghostscriptCommand = "gswin64c";
+    }
 ?>
 
 <html>
@@ -46,7 +51,9 @@
         exec($cmd, $output, $return);
 
         if($return) {
-            echo "ghostscript problem";
+            echo "ghostscript problem <br>";
+            echo json_encode($output);
+            return;
         }
 
         //dekodowanie pliku

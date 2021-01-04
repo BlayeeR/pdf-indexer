@@ -118,7 +118,7 @@ class PdfObject {
                 }
                 break;
             case PDF_OBJECT_DICTIONARY:
-                if(preg_match_all("/(\/[\w\+\-,]+)\s*(<<[\S\s]*>>)?|(\[[\S\s]*?\])?|(\([\S\s]*?\))?|([\w\s]+)?/m", $this->getStrippedContent(), $matches, PREG_UNMATCHED_AS_NULL)) {
+                if(preg_match_all("/(\/[\w\+\-,]+)\s*(<<[\S\s]*>>)?|(\[[\S\s]*?\])?|(\([\S\s]*?\))?|([\w\s.]+)?/m", $this->getStrippedContent(), $matches, PREG_UNMATCHED_AS_NULL)) {
                     $flat = [];
                     for($i = 0; $i < count($matches[0]); $i++) {//18
                         for($j = 1; $j < count($matches); $j++) {//5
@@ -228,8 +228,20 @@ class PdfObject {
         $pattern = "";
         switch ($type) {
             case PDF_OBJECT_DICTIONARY:
-                $pattern = "/(?<=<<)([\S\s]*)(?=>>)/m";
-                break;
+                $positionCounter = strpos($content, "<<") + 2;
+                $openBr = 1;
+
+                while($openBr > 0 && $positionCounter < strlen($content)-1) {
+                    if($content[$positionCounter] == '<' && $content[$positionCounter +1] == '<') {
+                        $openBr += 1;
+                    }
+                    else if($content[$positionCounter] == '>' && $content[$positionCounter +1] == '>') {
+                        $openBr -= 1;
+                    }
+                    $positionCounter += 1;
+                }
+
+                return substr($content, strpos($content, "<<") + 2, $positionCounter-1);
             case PDF_OBJECT_BLOCK:
                 $pattern = "/(?<=obj)([\S\s]*)(?=endobj)/m";
                 break;
@@ -260,7 +272,10 @@ class PdfObject {
         return $content;
     }
 
-    public static function getObjectType(string $content): int {
+    public static function getObjectType(string|null $content): int {
+        if($content == null) {
+            return PDF_OBJECT_NULL;
+        }
         $str = trim($content);
         if($str != "") {
             switch ($str[0]) {
