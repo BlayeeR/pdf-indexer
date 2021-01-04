@@ -177,7 +177,7 @@ class PdfObject {
 
     public static function getObjectsContent(string $content): array {
         $output = [];
-        if(self::getObjectType($content) != PDF_OBJECT_STREAM && strpos($content, "<<") != false) {
+        if(self::getObjectType($content) != PDF_OBJECT_STREAM && str_starts_with(ltrim($content), "<<")) {
             $positionCounter = strpos($content, "<<") + 2;
             $openBr = 1;
 

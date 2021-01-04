@@ -6,7 +6,7 @@
     $target_dir = "pliki/";
 
     if(array_key_exists("fileToUpload", $_FILES)){
-        $filePath = $target_dir . basename($_FILES["fileToUpload"]["name"]);;
+        $filePath = $target_dir . $_FILES["fileToUpload"]["name"];
         move_uploaded_file($_FILES['fileToUpload']['tmp_name'], $filePath);
     }
 
@@ -47,7 +47,7 @@
 <?php
     if(isset($filePath) && $filePath != "") {
         //konwertowanie pliku na wersję 1.4
-        $cmd = $ghostscriptCommand . ' -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/default -dNOPAUSE -dQUIET -dBATCH -dDetectDuplicateImages -dCompressFonts=true -r150 -sOutputFile=' . "input.pdf" . ' ' . $filePath;//-sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dCompressFonts=false -dBATCH -dNOPAUSE -sOutputFile=' . "input.pdf" . ' ' . "trudny.pdf";
+        $cmd = $ghostscriptCommand . ' -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/default -dNOPAUSE -dQUIET -dBATCH -dDetectDuplicateImages -dCompressFonts=true -r150 -sOutputFile=' . "input.pdf" . ' "' . $filePath . '"';//-sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dCompressFonts=false -dBATCH -dNOPAUSE -sOutputFile=' . "input.pdf" . ' ' . "trudny.pdf";
         exec($cmd, $output, $return);
 
         if($return) {
@@ -61,7 +61,7 @@
         exec($cmd, $output, $return);
 
         if($return) {
-            echo "pdf problem";
+            echo "qpdf problem";
         }
 
         $pdf = new Pdf("input_uncompressed.pdf");
@@ -201,11 +201,11 @@
                         if(preg_match_all($kwotyPatterny['decimal'], $subText, $decimalMatches)) {
                             foreach($decimalMatches[0] as $decimal) {
                                 $dec = str_replace(
-                                    ["\n", "\r", "\t", "\f"],
-                                    ["", "", "", ""],
+                                    [" ","\n", "\r", "\t", "\f", ","],
+                                    ["", "", "", "", "", "."],
                                     $decimal
                                 );
-                                array_push($decimals, (float)str_replace(",", ".", $dec));
+                                array_push($decimals, (float)$dec);
                             }
                         }
 
