@@ -6,8 +6,10 @@ class PdfPageContent extends PdfObject {
 
     private PdfPage $page;
     private int $searchRadius = 15;
+    private array $rawTextArray;
     private array $textArray;
     private string $rawText;
+    private string $text;
 
     public function __construct(PdfObject $object, PdfPage $page)
     {
@@ -23,6 +25,8 @@ class PdfPageContent extends PdfObject {
         $this->page = $page;
 
         $this->rawText = $this->parseRawText();
+        $this->text = $this->parseText();
+        $this->rawTextArray = $this->parseRawTextArray();
         $this->textArray = $this->parseTextArray();
     }
 
@@ -40,7 +44,7 @@ class PdfPageContent extends PdfObject {
         return $commands;
     }
 
-    public function getText(): string {
+    public function parseText(): string {
         $text = "";
 
         foreach($this->getObjectsByType(PDF_OBJECT_STREAM) as $stream) {
@@ -212,7 +216,7 @@ class PdfPageContent extends PdfObject {
         }
     }
 
-    private function parseTextArray() {
+    private function parseRawTextArray() {
         $text = array();
         $textString = "";
 
@@ -326,9 +330,152 @@ class PdfPageContent extends PdfObject {
         return $text;
     }
 
-    public function getTextArray(): array
+    public function parseTextArray(): array {
+        $text = array();
+        $textString = "";
+
+        foreach($this->getObjectsByType(PDF_OBJECT_STREAM) as $stream) {
+            foreach ($stream->getObjectsByType(PDF_OBJECT_TEXT_BLOCK) as $block) {
+                $matrix = null;
+                foreach ($block->getObjectsByType(PDF_OBJECT_TEXT_COMMAND) as $command) {
+
+                    switch ($command->getName()) {
+                        case 'Td':
+                            $args = preg_split('/\s/s', $command->getValue());
+                            $x = (float)array_shift($args);
+                            $y = (float)array_shift($args);
+
+                            $oldXY = $this->getXY($matrix);
+
+                            if(!$matrix) {
+                                $matrix = new Matrix\Matrix([
+                                    [1, 0, 0],
+                                    [0, 1, 0],
+                                    [$x, $y, 1]]);
+                            }
+                            else {
+                                $matrix = (new Matrix\Matrix([
+                                    [1, 0, 0],
+                                    [0, 1, 0],
+                                    [$x, $y, 1]]))->multiply($matrix);
+                            }
+
+                            $newXY = $this->getXY($matrix);
+
+                            if ($newXY['x'] <= 0 || $newXY['y'] < $oldXY['y']) {
+                                $textString .= "\n";
+                            }
+                            break;
+                        case 'TD':
+                            $args = preg_split('/\s/s', $command->getValue());
+                            $x = array_shift($args);
+                            $y = array_shift($args);
+
+                            $tl = -(float)$y;
+                            if(!$matrix) {
+                                $matrix = new Matrix\Matrix([
+                                    [1, 0, 0],
+                                    [0, 1, 0],
+                                    [0, -$tl, 1]]);
+                            }
+                            else {
+                                $matrix = (new Matrix\Matrix([
+                                    [1, 0, 0],
+                                    [0, 1, 0],
+                                    [0, -$tl, 1]]))->multiply($matrix);
+                            }
+
+                            $matrix = (new Matrix\Matrix([
+                                [1, 0, 0],
+                                [0, 1, 0],
+                                [$x, $y, 1]]))->multiply($matrix);
+
+                            $newXY = $this->getXY($matrix);
+
+                            if ($newXY['y'] < 0) {
+                                $textString .= "\n";
+                            } elseif ($newXY['x'] <= 0) {
+                                $textString .= ' ';
+                            }
+                            break;
+                        case 'Tf':
+                            if (preg_match("/(\w+)\s+(\d+)/", $command->getValue(), $match)) {
+                                $current_font = $this->page->getFont($match[1]);
+                            }
+                            break;
+                        case "'":
+                        case 'Tj':
+                        case 'TJ':
+                            $subText = $current_font->translateText($command);
+                            $xy = $this->getXY($matrix);
+
+                            $count = count($text);
+                            $text[$count] = [
+                                'text' => $subText,
+                                'x' => $xy['x'],
+                                'y' => $xy['y'],
+                                'index' => strlen($textString) == 0 ? 0 : strlen($textString) - 1
+                            ];
+                            $textString .= $subText;
+
+                            break;
+                        case 'Tm':
+                            $args = preg_split('/\s/s', rtrim($command->getValue()));
+                            $f = array_pop($args);
+                            $e = array_pop($args);
+                            $d = array_pop($args);
+                            $c = array_pop($args);
+                            $b = array_pop($args);
+                            $a = array_pop($args);
+
+                            $oldXY = $this->getXY($matrix);
+                            $matrix = new Matrix\Matrix([
+                                [$a, $b, 0],
+                                [$c, $d, 0],
+                                [$e, $f, 1]]);
+                            $newXY = $this->getXY($matrix);
+
+                            if (abs($newXY['x'] - $oldXY['x']) > 10) {
+                                $textString .= "\t";
+                            }
+                            if (abs($newXY['y']-$oldXY['y']) > 10) {
+                                $textString .= "\n";
+                            }
+                            break;
+                        case 'TL':
+                            $args = preg_split('/\s/s', $command->getValue());
+                            $tl = (float)array_shift($args);
+
+                            if(!$matrix) {
+                                $matrix = new Matrix\Matrix([
+                                    [1, 0, 0],
+                                    [0, 1, 0],
+                                    [0, -$tl, 1]]);
+                            }
+                            else {
+                                $matrix = (new Matrix\Matrix([
+                                    [1, 0, 0],
+                                    [0, 1, 0],
+                                    [0, -$tl, 1]]))->multiply($matrix);
+                            }
+
+                            $textString .= ' ';
+                            break;
+                        case 'Tz':
+                        case 'T*':
+                            $textString .= "\n";
+                            break;
+
+                    }
+                }
+            }
+        }
+        return $text;
+    }
+
+    public function getRawTextArray(): array
     {
-        return $this->textArray;
+        return $this->rawTextArray;
     }
 
     public function getRawText(): string
@@ -336,11 +483,35 @@ class PdfPageContent extends PdfObject {
         return $this->rawText;
     }
 
+    public function getNearbyRawTexts($x, $y): array {
+        $ret = [];
+
+        foreach($this->rawTextArray as $text) {
+            if(($text['x'] >= $x-$this->searchRadius) && $text['y'] >= $y-$this->searchRadius && $text['y'] <= $y +$this->searchRadius) {
+                array_push($ret, $text);
+            }
+        }
+
+        return $ret;
+    }
+
     public function getNearbyTexts($x, $y): array {
         $ret = [];
 
         foreach($this->textArray as $text) {
             if(($text['x'] >= $x-$this->searchRadius) && $text['y'] >= $y-$this->searchRadius && $text['y'] <= $y +$this->searchRadius) {
+                $ret[$text['index']] = $text;
+            }
+        }
+
+        return $ret;
+    }
+
+    public function getNearbyYCoordinateRawTexts($y): array {
+        $ret = [];
+
+        foreach($this->rawTextArray as $text) {
+            if($text['y'] >= $y-$this->searchRadius && $text['y'] <= $y +$this->searchRadius) {
                 array_push($ret, $text);
             }
         }
@@ -361,6 +532,17 @@ class PdfPageContent extends PdfObject {
     }
 
     public function getTextValueFromRawIndex($index) {
+        for($i = count($this->rawTextArray) - 1; $i >= 0; $i--) {
+            $text = $this->rawTextArray[$i];
+            if($index >= $text['index']) {
+                return $text;
+            }
+        }
+
+        return null;
+    }
+
+    public function getTextValueFromIndex($index) {
         for($i = count($this->textArray) - 1; $i >= 0; $i--) {
             $text = $this->textArray[$i];
             if($index >= $text['index']) {
@@ -377,6 +559,22 @@ class PdfPageContent extends PdfObject {
     public function setSearchRadius(int $searchRadius): void
     {
         $this->searchRadius = $searchRadius;
+    }
+
+    /**
+     * @return array|string
+     */
+    public function getTextArray()
+    {
+        return $this->textArray;
+    }
+
+    /**
+     * @return string
+     */
+    public function getText(): string
+    {
+        return $this->text;
     }
 }
 

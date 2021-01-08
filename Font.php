@@ -156,23 +156,6 @@ class Font extends PdfObject
             }
             $text = $result;
         }
-        elseif (isset($this->encoding)) {
-            $unicode = mb_check_encoding($text, 'UTF-8');
-            $result = '';
-            if ($unicode) {
-                $chars = preg_split('//s'.($unicode ? 'u' : ''),$text,-1,PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY
-                );
-
-                foreach ($chars as $char) {
-                    $result .= mb_convert_encoding('&#'.((int) '?').';', 'UTF-8', 'HTML-ENTITIES');
-                }
-            } else {
-                for ($i = 0; $i < strlen($text); ++$i) {
-                    $result .= mb_convert_encoding('&#'.((int) '?').';', 'UTF-8', 'HTML-ENTITIES');
-                }
-            }
-            $text = $result;
-        }
         elseif (!mb_check_encoding($text, 'UTF-8')) {
             $text = mb_convert_encoding($text, 'UTF-8', 'Windows-1252');
         }
