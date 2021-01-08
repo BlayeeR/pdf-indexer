@@ -21,27 +21,22 @@
         $infoRadius = (int)$_POST['infoRadius'];
     }
 
-    $hostname = URL_UNIX;
-    if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-        $hostname = URL_WIN;
-    }
-
     if(array_key_exists("fileToUpload", $_FILES)) {
         $filePath = $target_dir . $_FILES["fileToUpload"]["name"];
         move_uploaded_file($_FILES['fileToUpload']['tmp_name'], $filePath);
 
-        $url = $hostname;
+        $url = "index.php";
         if(isset($_POST['text'])) {
-            $url = $url . "/text.php?file=" . urlencode($_FILES["fileToUpload"]["name"]);
+            $url = "text.php?file=" . urlencode($_FILES["fileToUpload"]["name"]);
         }
         else if(isset($_POST['date'])) {
-            $url = $url . "/date.php?file=" . urlencode($_FILES["fileToUpload"]["name"]) . "&radius=" . $dateRadius;
+            $url = "date.php?file=" . urlencode($_FILES["fileToUpload"]["name"]) . "&radius=" . $dateRadius;
         }
         else if(isset($_POST['amount'])) {
-            $url = $url . "/amount.php?file=" . urlencode($_FILES["fileToUpload"]["name"]) . "&radius=" . $amountRadius;
+            $url = "amount.php?file=" . urlencode($_FILES["fileToUpload"]["name"]) . "&radius=" . $amountRadius;
         }
         else if(isset($_POST['info'])) {
-            $url = $url . "/info.php?file=" . urlencode($_FILES["fileToUpload"]["name"]) . "&radius=" . $infoRadius;
+            $url = "info.php?file=" . urlencode($_FILES["fileToUpload"]["name"]) . "&radius=" . $infoRadius;
         }
         header("Location: " . $url);
         die();

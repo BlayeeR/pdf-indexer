@@ -12,6 +12,3 @@ const PDF_OBJECT_STREAM = 7;
 const PDF_OBJECT_TEXT_BLOCK = 8;
 const PDF_OBJECT_TEXT_COMMAND = 9;
 const PDF_OBJECT_CHAR = 10;
-
-const URL_UNIX = 'http://127.0.0.1:8001';
-const URL_WIN = 'http://localhost:8001';
