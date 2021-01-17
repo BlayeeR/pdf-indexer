@@ -1,0 +1,25 @@
+Header add Access-Control-Max-Age "1000"
+Header add Access-Control-Allow-Headers "x-requested-with, Content-Type, origin, authorization, accept, client-security-token"
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  RewriteCond %{REQUEST_URI} api/
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^([^\.]+)$ $1.php [NC,L]
+
+  RewriteCond %{REQUEST_URI} api/(.*)
+  RewriteCond %{REQUEST_URI} !api/endpoints/(.*)
+  RewriteRule api/(.*) api/endpoints/$1 [NC,L]
+    
+  RewriteCond %{REQUEST_URI} !api/(.*)
+  RewriteCond %{REQUEST_URI} !frontend/dist/frontend/(.*)
+  RewriteRule (.*) /frontend/dist/frontend/$1 [NC,L]
+
+  RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -f [OR]
+  RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -d
+  RewriteRule ^.*$ - [NC,L]
+
+  RewriteCond %{REQUEST_URI} !api/(.*)
+  RewriteRule ^(.*) index.html [NC,L]
+</IfModule>

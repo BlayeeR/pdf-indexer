@@ -1,0 +1,17 @@
+{
+  "require": {
+    "ext-json": "*",
+    "markbaker/matrix": "*",
+    "doctrine/orm": "^2.6.2",
+    "symfony/yaml": "2.*",
+    "ext-fileinfo": "*"
+  },
+  "autoload": {
+    "psr-0": {
+      "": "models/"
+    },
+    "psr-4": {
+      "PdfIndexer\\Models\\":"models/"
+    }
+  }
+}

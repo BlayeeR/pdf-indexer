@@ -1,0 +1,53 @@
+@import "../../styles.scss";
+
+.menu {
+    height: 100%;
+}
+
+.menu-title {
+    margin: 0 auto;
+    height: 10%;
+    border-radius: 20px 0 0 0;
+    display: flex;
+    align-items: center;
+    padding-left: 15%;
+    font-weight: 700;
+    color: #30498d;
+    font-size: 16px;
+    span {
+        margin-right: 10px;
+    }
+}
+
+.menu-header {
+    font-weight: 600;
+    color: #435ebe;
+    padding-left: 15%;
+    height: 30px;
+    margin: 5px 0;
+    display: flex;
+    align-items: center;
+}
+
+.menu-body {
+    .menu-option {
+        padding-left: 7%;
+        height: 50px;
+        width: stretch;
+        margin: 5px 8%;
+        display: flex;
+        align-items: center;
+        border-radius: 10px;
+        font-weight: 500;
+        color: #435ebe;
+        > span {
+            margin-right: 10px;
+        }
+    }
+
+    .menu-option.active {
+        color: white;
+        background: #435ebe;
+        box-shadow: 5px 5px 10px #b5b5b5;
+    }
+}

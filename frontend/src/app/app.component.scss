@@ -1,0 +1,32 @@
+@import "../styles.scss";
+
+.main {
+    height: 100vh;
+    overflow: auto;
+    background: #dae2f4;
+}
+
+.main > div {
+  margin: 10%;
+  display: flex;
+  height: stretch;
+  min-height: 800px;
+  min-width: 1100px;
+  border-radius: 20px;
+  box-shadow: 5px 5px 10px #b5b5b5;
+}
+
+.main > div > .menu-container {
+    border-radius: 20px 0 0 20px;
+    height: stretch;
+    min-width: 300px;
+    width: 25%;
+    background: #ffffff;
+}
+
+.main > div > .content-container {
+    width: stretch;
+    border-radius: 0 20px 20px 0;
+    background: #f2f7ff;
+    height: stretch;
+}

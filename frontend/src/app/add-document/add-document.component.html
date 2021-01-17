@@ -1,0 +1,179 @@
+<ng-template [ngIf]="view === 0">
+    <div class="page">
+        <div class="page-title">Krok 1: Wybór dokumentu</div>
+        <div class="page-content">
+            <label for="file"
+                ><span class="material-icons"> note_add </span></label
+            >
+            <input
+                style="display: none"
+                type="file"
+                id="file"
+                (change)="handleFileInput($event.target.files)"
+                accept="application/pdf"
+            />
+        </div>
+        <div class="page-footer">
+            <button mat-raised-button color="primary" (click)="nextStep()">
+                Dalej
+            </button>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template [ngIf]="view === 1">
+    <div class="page">
+        <div class="page-title">Krok 2: Wyszukiwanie dat</div>
+        <div class="page-content step-2">
+            <ng-template [ngIf]="file">
+                <mat-form-field>
+                    <mat-label>Nazwa pliku:</mat-label>
+                    <input
+                        name="name"
+                        disabled
+                        matInput
+                        [(ngModel)]="documentService.documentConditions.Name"
+                    />
+                </mat-form-field>
+                <mat-slider
+                    (input)="onSlide($event, 1)"
+                    thumbLabel
+                    tickInterval="1"
+                    min="1"
+                    max="100"
+                    [(ngModel)]="
+                        documentService.documentConditions.DateSearchRadius
+                    "
+                ></mat-slider>
+                <div
+                    *ngFor="
+                        let date of documentService.documentConditions.Dates
+                    "
+                >
+                    <mat-label>{{ date.Name }}: {{ date.Value }}</mat-label>
+                </div>
+            </ng-template>
+        </div>
+        <div class="page-footer">
+            <button mat-raised-button color="primary" (click)="previousStep()">
+                Wróć
+            </button>
+            <button mat-raised-button color="primary" (click)="nextStep()">
+                Dalej
+            </button>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template [ngIf]="view === 2">
+    <div class="page">
+        <div class="page-title">Krok 3: Wyszukiwanie kwot</div>
+        <div class="page-content step-2">
+            <ng-template [ngIf]="file">
+                <mat-form-field>
+                    <mat-label>Nazwa pliku:</mat-label>
+                    <input
+                        name="name"
+                        disabled
+                        matInput
+                        [(ngModel)]="documentService.documentConditions.Name"
+                    />
+                </mat-form-field>
+                <mat-slider
+                    (input)="onSlide($event, 2)"
+                    thumbLabel
+                    tickInterval="1"
+                    min="1"
+                    max="100"
+                    [(ngModel)]="
+                        documentService.documentConditions.AmountSearchRadius
+                    "
+                ></mat-slider>
+                <div
+                    *ngFor="
+                        let amount of documentService.documentConditions.Amounts
+                    "
+                >
+                    <ng-template [ngIf]="!amount.Description">
+                        <mat-label
+                            >{{ amount.Brutto }} zł + VAT: {{ amount.Vat }}:
+                            {{ amount.Netto }} zł</mat-label
+                        >
+                    </ng-template>
+                    <ng-template [ngIf]="amount.Description === 'Podsumowanie'">
+                        <mat-label>
+                            Podsumowanie: {{ amount.Brutto }} zł + VAT:
+                            {{ amount.Netto }} zł</mat-label
+                        >
+                    </ng-template>
+                </div>
+            </ng-template>
+        </div>
+        <div class="page-footer">
+            <button mat-raised-button color="primary" (click)="previousStep()">
+                Wróć
+            </button>
+            <button mat-raised-button color="primary" (click)="nextStep()">
+                Dalej
+            </button>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template [ngIf]="view === 3">
+    <div class="page">
+        <div class="page-title">Krok 4: Wyszukiwanie danych</div>
+        <div class="page-content step-2">
+            <ng-template [ngIf]="file">
+                <mat-form-field>
+                    <mat-label>Nazwa pliku:</mat-label>
+                    <input
+                        name="name"
+                        disabled
+                        matInput
+                        [(ngModel)]="documentService.documentConditions.Name"
+                    />
+                </mat-form-field>
+                <mat-slider
+                    (input)="onSlide($event, 3)"
+                    thumbLabel
+                    tickInterval="1"
+                    min="1"
+                    max="100"
+                    [(ngModel)]="
+                        documentService.documentConditions.InfoSearchRadius
+                    "
+                ></mat-slider>
+                <div
+                    *ngFor="
+                        let info of documentService.documentConditions.Info;
+                        index as i
+                    "
+                >
+                    <mat-form-field>
+                        <mat-label>{{ info.Name }}</mat-label>
+                        <mat-select
+                            [(ngModel)]="info.Selected"
+                            multiple
+                            required
+                        >
+                            <mat-option
+                                *ngFor="let option of info.Nearby; index as j"
+                                [value]="j"
+                                >{{ option }}</mat-option
+                            >
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </ng-template>
+        </div>
+        <div class="page-footer">
+            <button mat-raised-button color="primary" (click)="previousStep()">
+                Wróć
+            </button>
+            <button mat-raised-button color="primary" (click)="nextStep()">
+                Dalej
+            </button>
+        </div>
+    </div>
+</ng-template>

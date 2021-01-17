@@ -1,0 +1,15 @@
+<div class="menu">
+    <div class="menu-title">
+        <span class="material-icons"> text_snippet </span>
+        Indeksator dokumentów
+    </div>
+    <div class="menu-header">
+      Menu
+    </div>
+    <div class="menu-body">
+        <button mat-button color="primary" *ngFor="let option of mainService.menuOptions" class="menu-option" [class.active]="activeRoute===option.Name" [routerLink]="option.Route">
+          <span class="material-icons"> {{ option.Icon }} </span>
+            {{ option.Name }}
+        </button>
+    </div>
+</div>
