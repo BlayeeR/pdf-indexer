@@ -94,18 +94,10 @@
                         let amount of documentService.documentConditions.Amounts
                     "
                 >
-                    <ng-template [ngIf]="!amount.Description">
                         <mat-label
-                            >{{ amount.Brutto }} zł + VAT: {{ amount.Vat }}:
-                            {{ amount.Netto }} zł</mat-label
+                            >{{ amount.Gross }} zł + VAT: {{ amount.Vat }}:
+                            {{ amount.Net }} zł</mat-label
                         >
-                    </ng-template>
-                    <ng-template [ngIf]="amount.Description === 'Podsumowanie'">
-                        <mat-label>
-                            Podsumowanie: {{ amount.Brutto }} zł + VAT:
-                            {{ amount.Netto }} zł</mat-label
-                        >
-                    </ng-template>
                 </div>
             </ng-template>
         </div>
@@ -146,7 +138,7 @@
                 ></mat-slider>
                 <div
                     *ngFor="
-                        let info of documentService.documentConditions.Info;
+                        let info of documentService.documentConditions.Infos;
                         index as i
                     "
                 >
@@ -176,4 +168,67 @@
             </button>
         </div>
     </div>
+</ng-template>
+
+<ng-template [ngIf]="view === 4">
+  <div class="page">
+      <div class="page-title">Krok 4: Podsumowanie</div>
+      <div class="page-content step-2">
+              <mat-form-field>
+                  <mat-label>Nazwa pliku:</mat-label>
+                  <input
+                      name="name"
+                      disabled
+                      matInput
+                      [(ngModel)]="documentService.documentConditions.Name"
+                  />
+              </mat-form-field>
+              <mat-form-field>
+                <mat-label>Nazwa dokumentu:</mat-label>
+                <input
+                    name="title"
+                    matInput
+                    [(ngModel)]="documentService.documentConditions.Title"
+                />
+            </mat-form-field>
+            <mat-label>Znalezione daty:</mat-label>
+            <div
+            *ngFor="
+                let date of documentService.documentConditions.Dates
+            "
+        >
+            <mat-label>{{ date.Name }}: {{ date.Value }}</mat-label>
+        </div>
+        <mat-label>Znalezione kwoty:</mat-label>
+        <div
+        *ngFor="
+            let amount of documentService.documentConditions.Amounts
+        "
+    >
+            <mat-label
+                >{{ amount.Gross }} zł + VAT: {{ amount.Vat }}:
+                {{ amount.Net }} zł</mat-label
+            >
+    </div>
+    <mat-label>Znalezione dane:</mat-label>
+        <div
+        *ngFor="
+            let info of documentService.documentConditions.Infos
+        "
+    >
+            <mat-label
+                >{{info.Name}}: {{infoValue(info)}}</mat-label
+            >
+    </div>
+
+      </div>
+      <div class="page-footer">
+          <button mat-raised-button color="primary" (click)="previousStep()">
+              Wróć
+          </button>
+          <button mat-raised-button color="primary" (click)="nextStep()">
+              Dalej
+          </button>
+      </div>
+  </div>
 </ng-template>

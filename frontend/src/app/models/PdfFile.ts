@@ -10,5 +10,5 @@ export interface PdfFile {
     InfoSearchRadius: number;
     Dates: Date[];
     Amounts: Amount[];
-    Info: Info[];
+    Infos: Info[];
 }

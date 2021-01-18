@@ -5,7 +5,7 @@ require_once 'Pdf.php';
 
 use PdfIndexer\Models as Models;
 
-function getTextValueFromRawIndex($index, $textObjects) {
+function getTextValueFromRawIndex2($index, $textObjects) {
     for($i = count($textObjects) - 1; $i >= 0; $i--) {
         if($index >= $textObjects[$i]->getRawIdx()) {
             return $textObjects[$i];
@@ -53,7 +53,7 @@ function findAmounts(Models\PdfFile $pdf, int $searchradius) {
 
                 $index = $matches[0][$i][1];
                 //pobieramy ten obiekt tekstowy, w którym znajduje się znaleziony podatek
-                $textObj = getTextValueFromRawIndex($index, $page->getTextObjects());
+                $textObj = getTextValueFromRawIndex2($index, $page->getTextObjects());
                 if ($textObj) {
 
 
@@ -84,9 +84,9 @@ function findAmounts(Models\PdfFile $pdf, int $searchradius) {
                         if ($key !== false && $key != $j) {
                             //taka liczba istnieje, więc dodajemy do wyniku
                             $ret = [
-                                'Brutto' => number_format($decimals[$j], 2, '.', ''),
+                                'Gross' => number_format($decimals[$j], 2, '.', ''),
                                 'Vat' => ltrim($matches[0][$i][0], "0"),
-                                'Netto' => number_format($decimals[$key], 2, '.', '')
+                                'Net' => number_format($decimals[$key], 2, '.', '')
                             ];
                         } //taka liczba nie istnieje
                         else {
@@ -95,9 +95,9 @@ function findAmounts(Models\PdfFile $pdf, int $searchradius) {
                             if ($key !== false && $key != $j) {
                                 //taka liczba istnieje, dodajemy do wyniku
                                 $ret = [
-                                    'Brutto' => number_format($decimals[$key], 2, '.', ''),
+                                    'Gross' => number_format($decimals[$key], 2, '.', ''),
                                     'Vat' => ltrim($matches[0][$i][0], "0"),
-                                    'Netto' => number_format($decimals[$j], 2, '.', '')
+                                    'Net' => number_format($decimals[$j], 2, '.', '')
                                 ];
                             }
                         }
@@ -124,10 +124,10 @@ function findAmounts(Models\PdfFile $pdf, int $searchradius) {
                         continue;
                     }
                     //sumujemy te kwoty
-                    $sum += $kwoty[$j]['Netto'];
+                    $sum += $kwoty[$j]['Net'];
                 }
                 //jesli suma pozostałych kwot jest równa sumie wybranej kwoty to znaczy, że ta kwota jest sumą pozostałych kwot- dodajemy jako podsumowanie
-                if ($sum == $kwoty[$i]['Netto']) {
+                if ($sum == $kwoty[$i]['Net']) {
                     $kwoty[$i] = array('Description' => 'Suma dla VAT: ' . $kwoty[$i]['Vat']) + $kwoty[$i];
                 }
             }
@@ -140,19 +140,21 @@ function findAmounts(Models\PdfFile $pdf, int $searchradius) {
             $sumBrutto = 0;
             for ($i = 0; $i < count($kwoty); $i++) {
                 if (!array_key_exists('Description', $kwoty[$i])) {
-                    $sumNetto += $kwoty[$i]['Netto'];
-                    $sumBrutto += $kwoty[$i]['Brutto'];
+                    $sumNetto += $kwoty[$i]['Net'];
+                    $sumBrutto += $kwoty[$i]['Gross'];
                 }
             }
 
             if ($sumNetto != 0 && $sumBrutto != 0) {
-                array_push($kwoty, ['Description' => 'Podsumowanie', 'Netto' => number_format($sumNetto, 2, '.', '') , 'Brutto' => number_format($sumBrutto, 2, '.', '')]);
+                array_push($kwoty, ['Description' => 'Podsumowanie', 'Net' => number_format($sumNetto, 2, '.', '') , 'Gross' => number_format($sumBrutto, 2, '.', '')]);
             }
 
         }
 
         foreach ($kwoty as $kwota) {
-            array_push($output, $kwota);
+            if(!array_key_exists("Description", $kwota)) {
+                array_push($output, $kwota);
+            }
         }
     }
 
