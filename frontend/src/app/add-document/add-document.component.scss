@@ -45,14 +45,64 @@
 
 .step-2 {
     flex-direction: column;
-    mat-form-field,
-    mat-slider,
     > div {
-        margin: 20px 0;
+        margin: 20px 0 0;
         width: 40%;
         color: #506fde;
     }
     > div {
         text-align: center;
+
+        mat-form-field,
+        > form {
+            width: 100%;
+        }
+
+        > mat-slider {
+            width: 100%;
+            margin-top: 25px;
+        }
+
+        > mat-label {
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            margin-bottom: 10px;
+            > span {
+                font-size: 15px;
+                cursor: default;
+            }
+        }
     }
+}
+
+.spinner {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+
+.completed {
+    > span {
+        font-size: 400px;
+        color: #30498d;
+    }
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
 }

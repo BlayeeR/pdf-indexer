@@ -1,0 +1,27 @@
+<ng-template [ngIf]="document">
+    <h2 mat-dialog-title>Dokument {{ document.Title }}</h2>
+    <mat-dialog-content>
+        <h3>Daty:</h3>
+        <div *ngFor="let date of document.Dates">
+            <div>{{ date.Name }}: {{ date.Value }}</div>
+        </div>
+        <h3>Kwoty:</h3>
+        <div *ngFor="let amount of document.Amounts">
+            <div>
+                {{ amount.Gross }} zł +
+                {{ documentService.mapVat(amount.Vat) }} VAT
+            </div>
+        </div>
+        <h3>Dane:</h3>
+        <div *ngFor="let info of document.Infos">
+            <div>{{ info.Name }}: {{ info.Value }}</div>
+        </div>
+        <h3>Tekst:</h3>
+        <div>
+            {{ document.Text }}
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+        <button mat-button mat-dialog-close>Zamknij</button>
+    </mat-dialog-actions>
+</ng-template>

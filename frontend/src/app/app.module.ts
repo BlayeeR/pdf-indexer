@@ -15,7 +15,11 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatSliderModule } from "@angular/material/slider";
 import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { MatDialogModule } from "@angular/material/dialog";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { DialogDocumentModule } from './dialog-document/dialog-document.module';
 
 @NgModule({
     declarations: [
@@ -36,7 +40,11 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
         MatInputModule,
         ReactiveFormsModule,
         FormsModule,
-        MatSelectModule
+        MatSelectModule,
+        MatProgressSpinnerModule,
+        MatTooltipModule,
+        MatDialogModule,
+        DialogDocumentModule
     ],
     providers: [
         {

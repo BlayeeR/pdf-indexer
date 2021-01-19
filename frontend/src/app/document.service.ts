@@ -65,6 +65,34 @@ export class DocumentService {
       const endpoint = "http://localhost/api/files/deletedocument?id=" + id;
       return this.httpClient.delete(endpoint);
     }
+
+    public async getDocument(id: number): Promise<PdfFile> {
+      const endpoint = "http://localhost/api/files/getdocument?id=" + id;
+      return await this.httpClient.get<PdfFile>(endpoint).toPromise();
+    }
+
+    public mapVat(vat: Vat) {
+      switch(vat) {
+        case Vat.vat_0: {
+          return "0%";
+        }
+        case Vat.vat_5: {
+          return "5%";
+        }
+        case Vat.vat_8: {
+          return "8%";
+        }
+        case Vat.vat_23: {
+          return "23%";
+        }
+        case Vat.vat_zw: {
+          return "zw";
+        }
+        case Vat.vat_np: {
+          return "np";
+        }
+      }
+    }
 }
 
 export class DocumentConditions {

@@ -1,15 +1,24 @@
-<div class="document" *ngFor="let document of data.documents; index as i">
-    <div class="document-header">
-      <div class="document-title">{{ document.Name }}</div>
-        <span class="material-icons" (click)="deleteDocument(document, i)"> cancel </span>
-    </div>
-    <div class="document-body">
-        <div class="document-body-left">
-            Ilość dat: {{ document.Dates.length }}
+<ng-template [ngIf]="!loading">
+    <div class="document" (click)="openDocument(document.Id)" *ngFor="let document of data.documents; index as i">
+        <div class="document-header">
+            <div class="document-title">{{ document.Title }}</div>
+            <span class="material-icons" (click)="$event.stopPropagation();deleteDocument(document, i)">
+                cancel
+            </span>
         </div>
-        <div>Ilość kwot: {{ document.Amounts.length }}</div>
-        <div class="document-body-right">
-            Ilość danych: {{ document.Infos.length }}
+        <div class="document-body">
+            <div class="document-body-left">
+                Ilość dat: {{ document.CountDates }}
+            </div>
+            <div>Ilość kwot: {{ document.CountAmounts }}</div>
+            <div class="document-body-right">
+                Ilość danych: {{ document.CountInfos }}
+            </div>
         </div>
     </div>
-</div>
+</ng-template>
+<ng-template [ngIf]="loading">
+    <div class="spinner">
+        <mat-spinner></mat-spinner>
+    </div>
+</ng-template>

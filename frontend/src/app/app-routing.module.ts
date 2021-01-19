@@ -5,7 +5,7 @@ import { DocumentsComponent } from './documents/documents.component';
 
 
 const routes: Routes = [
-  { path: 'documents', component: DocumentsComponent },
+  { path: 'documents', component: DocumentsComponent},
   { path: 'add-document', component: AddDocumentComponent},
   { path: '', redirectTo: '/documents', pathMatch: 'full'}
 ];

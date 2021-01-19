@@ -4,6 +4,7 @@
   margin: 20px 20px 0 20px;
   padding-top: 1px;
   color: #435ebe;
+  cursor: pointer;
 
     .document-header {
       background: #DEEBFF;
@@ -45,4 +46,13 @@
 
 :last-child.document {
   margin-bottom: 20px;
+}
+
+.spinner {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

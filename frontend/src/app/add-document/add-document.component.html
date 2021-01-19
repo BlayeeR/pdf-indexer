@@ -1,234 +1,361 @@
-<ng-template [ngIf]="view === 0">
-    <div class="page">
-        <div class="page-title">Krok 1: Wybór dokumentu</div>
-        <div class="page-content">
-            <label for="file"
-                ><span class="material-icons"> note_add </span></label
-            >
-            <input
-                style="display: none"
-                type="file"
-                id="file"
-                (change)="handleFileInput($event.target.files)"
-                accept="application/pdf"
-            />
-        </div>
-        <div class="page-footer">
-            <button mat-raised-button color="primary" (click)="nextStep()">
-                Dalej
-            </button>
-        </div>
-    </div>
-</ng-template>
-
-<ng-template [ngIf]="view === 1">
-    <div class="page">
-        <div class="page-title">Krok 2: Wyszukiwanie dat</div>
-        <div class="page-content step-2">
-            <ng-template [ngIf]="file">
-                <mat-form-field>
-                    <mat-label>Nazwa pliku:</mat-label>
-                    <input
-                        name="name"
-                        disabled
-                        matInput
-                        [(ngModel)]="documentService.documentConditions.Name"
-                    />
-                </mat-form-field>
-                <mat-slider
-                    (input)="onSlide($event, 1)"
-                    thumbLabel
-                    tickInterval="1"
-                    min="1"
-                    max="100"
-                    [(ngModel)]="
-                        documentService.documentConditions.DateSearchRadius
-                    "
-                ></mat-slider>
-                <div
-                    *ngFor="
-                        let date of documentService.documentConditions.Dates
-                    "
+<ng-template [ngIf]="!loading">
+    <ng-template [ngIf]="view === 0">
+        <div class="page">
+            <div class="page-title">Krok 1: Wybór dokumentu</div>
+            <div class="page-content">
+                <label for="file"
+                    ><span class="material-icons noselect">
+                        note_add
+                    </span></label
                 >
-                    <mat-label>{{ date.Name }}: {{ date.Value }}</mat-label>
+                <input
+                    style="display: none"
+                    type="file"
+                    id="file"
+                    (change)="handleFileInput($event.target.files)"
+                    accept="application/pdf"
+                />
+            </div>
+            <div class="page-footer">
+                <button mat-raised-button color="primary" (click)="nextStep()">
+                    Dalej
+                </button>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template [ngIf]="view === 1">
+        <div class="page">
+            <div class="page-title">Krok 2: Wyszukiwanie dat</div>
+            <div class="page-content step-2">
+                <ng-template [ngIf]="file">
+                    <div>
+                        <mat-label>Nazwa pliku:</mat-label>
+                        <mat-form-field>
+                            <input
+                                name="name"
+                                disabled
+                                matInput
+                                [(ngModel)]="
+                                    documentService.documentConditions.Name
+                                "
+                            />
+                        </mat-form-field>
+                    </div>
+                    <div>
+                        <mat-label
+                            >Zakres wyszukiwania
+                            <span
+                                class="material-icons"
+                                matTooltip="Określa jak daleko na stronie może znajdować się
+                          szukane słowo kluczowe względem wartości. Jeśli
+                          znalezione elementy nie odpowiadają wartościom w
+                          dokumencie, można spróbować skorygować to za pomocą
+                          zakresu wyszukiwania."
+                            >
+                                help </span
+                            >:
+                        </mat-label>
+                        <mat-slider
+                            color="primary"
+                            (input)="onSlide($event, 1)"
+                            thumbLabel
+                            tickInterval="1"
+                            min="1"
+                            max="100"
+                            [(ngModel)]="
+                                documentService.documentConditions
+                                    .DateSearchRadius
+                            "
+                        ></mat-slider>
+                    </div>
+                    <div>
+                        <mat-label>Znalezione daty:</mat-label>
+                        <div
+                            *ngFor="
+                                let date of documentService.documentConditions
+                                    .Dates
+                            "
+                        >
+                            <mat-label
+                                >{{ date.Name }}: {{ date.Value }}</mat-label
+                            >
+                        </div>
+                    </div>
+                </ng-template>
+            </div>
+            <div class="page-footer">
+                <button
+                    mat-raised-button
+                    color="primary"
+                    (click)="previousStep()"
+                >
+                    Wróć
+                </button>
+                <button mat-raised-button color="primary" (click)="nextStep()">
+                    Dalej
+                </button>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template [ngIf]="view === 2">
+        <div class="page">
+            <div class="page-title">Krok 3: Wyszukiwanie kwot</div>
+            <div class="page-content step-2">
+                <ng-template [ngIf]="file">
+                    <div>
+                        <mat-label>Nazwa pliku:</mat-label>
+                        <mat-form-field>
+                            <input
+                                name="name"
+                                disabled
+                                matInput
+                                [(ngModel)]="
+                                    documentService.documentConditions.Name
+                                "
+                            />
+                        </mat-form-field>
+                    </div>
+                    <div>
+                        <mat-label
+                            >Zakres wyszukiwania<span
+                                class="material-icons"
+                                matTooltip="Określa jak daleko na stronie może znajdować się
+                      szukane słowo kluczowe względem wartości. Jeśli
+                      znalezione elementy nie odpowiadają wartościom w
+                      dokumencie, można spróbować skorygować to za pomocą
+                      zakresu wyszukiwania."
+                            >
+                                help </span
+                            >:</mat-label
+                        >
+                        <mat-slider
+                            color="primary"
+                            (input)="onSlide($event, 2)"
+                            thumbLabel
+                            tickInterval="1"
+                            min="1"
+                            max="100"
+                            [(ngModel)]="
+                                documentService.documentConditions
+                                    .AmountSearchRadius
+                            "
+                        ></mat-slider>
+                    </div>
+                    <div>
+                        <mat-label>Znalezione kwoty:</mat-label>
+                        <div
+                            *ngFor="
+                                let amount of documentService.documentConditions
+                                    .Amounts
+                            "
+                        >
+                            <mat-label
+                                >{{ amount.Gross }} zł + VAT: {{ amount.Vat }}:
+                                {{ amount.Net }} zł</mat-label
+                            >
+                        </div>
+                    </div>
+                </ng-template>
+            </div>
+            <div class="page-footer">
+                <button
+                    mat-raised-button
+                    color="primary"
+                    (click)="previousStep()"
+                >
+                    Wróć
+                </button>
+                <button mat-raised-button color="primary" (click)="nextStep()">
+                    Dalej
+                </button>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template [ngIf]="view === 3">
+        <div class="page">
+            <div class="page-title">Krok 4: Wyszukiwanie danych</div>
+            <div class="page-content step-2">
+                <ng-template [ngIf]="file">
+                    <div>
+                        <mat-label>Nazwa pliku:</mat-label>
+                        <mat-form-field>
+                            <input
+                                name="name"
+                                disabled
+                                matInput
+                                [(ngModel)]="
+                                    documentService.documentConditions.Name
+                                "
+                            />
+                        </mat-form-field>
+                    </div>
+                    <div>
+                        <mat-label>
+                            Zakres wyszukiwania<span
+                                class="material-icons"
+                                matTooltip="Określa jak daleko na stronie może znajdować się
+            szukane słowo kluczowe względem wartości. Jeśli
+            znalezione elementy nie odpowiadają wartościom w
+            dokumencie, można spróbować skorygować to za pomocą
+            zakresu wyszukiwania."
+                            >
+                                help </span
+                            >:
+                        </mat-label>
+                        <mat-slider
+                            color="primary"
+                            (input)="onSlide($event, 3)"
+                            thumbLabel
+                            tickInterval="1"
+                            min="1"
+                            max="100"
+                            [(ngModel)]="
+                                documentService.documentConditions
+                                    .InfoSearchRadius
+                            "
+                        ></mat-slider>
+                    </div>
+                    <div>
+                        <mat-label>Znalezione dane:</mat-label>
+                        <form #infoForm="ngForm">
+                            <mat-form-field
+                                *ngFor="
+                                    let info of documentService
+                                        .documentConditions.Infos;
+                                    index as i
+                                "
+                            >
+                                <mat-label>{{ info.Name }}</mat-label>
+                                <mat-select
+                                    name="info{{ i }}"
+                                    #infoSelect
+                                    [(ngModel)]="info.Selected"
+                                    multiple
+                                    required
+                                >
+                                    <mat-option
+                                        *ngFor="
+                                            let option of info.Nearby;
+                                            index as j
+                                        "
+                                        [value]="j"
+                                        >{{ option }}</mat-option
+                                    >
+                                </mat-select>
+                            </mat-form-field>
+                        </form>
+                    </div>
+                </ng-template>
+            </div>
+            <div class="page-footer">
+                <button
+                    mat-raised-button
+                    color="primary"
+                    (click)="previousStep()"
+                >
+                    Wróć
+                </button>
+                <button mat-raised-button color="primary" (click)="nextStep()">
+                    Dalej
+                </button>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template [ngIf]="view === 4">
+        <div class="page">
+            <div class="page-title">Krok 4: Podsumowanie</div>
+            <div class="page-content step-2">
+                <div>
+                    <mat-label>Nazwa pliku:</mat-label>
+                    <mat-form-field>
+                        <input
+                            name="name"
+                            disabled
+                            matInput
+                            [(ngModel)]="
+                                documentService.documentConditions.Name
+                            "
+                        />
+                    </mat-form-field>
                 </div>
-            </ng-template>
-        </div>
-        <div class="page-footer">
-            <button mat-raised-button color="primary" (click)="previousStep()">
-                Wróć
-            </button>
-            <button mat-raised-button color="primary" (click)="nextStep()">
-                Dalej
-            </button>
-        </div>
-    </div>
-</ng-template>
-
-<ng-template [ngIf]="view === 2">
-    <div class="page">
-        <div class="page-title">Krok 3: Wyszukiwanie kwot</div>
-        <div class="page-content step-2">
-            <ng-template [ngIf]="file">
-                <mat-form-field>
-                    <mat-label>Nazwa pliku:</mat-label>
-                    <input
-                        name="name"
-                        disabled
-                        matInput
-                        [(ngModel)]="documentService.documentConditions.Name"
-                    />
-                </mat-form-field>
-                <mat-slider
-                    (input)="onSlide($event, 2)"
-                    thumbLabel
-                    tickInterval="1"
-                    min="1"
-                    max="100"
-                    [(ngModel)]="
-                        documentService.documentConditions.AmountSearchRadius
-                    "
-                ></mat-slider>
-                <div
-                    *ngFor="
-                        let amount of documentService.documentConditions.Amounts
-                    "
-                >
+                <div>
+                    <mat-label>Nazwa dokumentu:</mat-label>
+                    <form #summaryForm="ngForm">
+                        <mat-form-field>
+                            <input
+                                name="title"
+                                matInput
+                                required
+                                [(ngModel)]="
+                                    documentService.documentConditions.Title
+                                "
+                            />
+                        </mat-form-field>
+                    </form>
+                </div>
+                <div>
+                    <mat-label>Znalezione daty:</mat-label>
+                    <div
+                        *ngFor="
+                            let date of documentService.documentConditions.Dates
+                        "
+                    >
+                        <mat-label>{{ date.Name }}: {{ date.Value }}</mat-label>
+                    </div>
+                </div>
+                <div>
+                    <mat-label>Znalezione kwoty:</mat-label>
+                    <div
+                        *ngFor="
+                            let amount of documentService.documentConditions
+                                .Amounts
+                        "
+                    >
                         <mat-label
                             >{{ amount.Gross }} zł + VAT: {{ amount.Vat }}:
                             {{ amount.Net }} zł</mat-label
                         >
+                    </div>
                 </div>
-            </ng-template>
-        </div>
-        <div class="page-footer">
-            <button mat-raised-button color="primary" (click)="previousStep()">
-                Wróć
-            </button>
-            <button mat-raised-button color="primary" (click)="nextStep()">
-                Dalej
-            </button>
-        </div>
-    </div>
-</ng-template>
-
-<ng-template [ngIf]="view === 3">
-    <div class="page">
-        <div class="page-title">Krok 4: Wyszukiwanie danych</div>
-        <div class="page-content step-2">
-            <ng-template [ngIf]="file">
-                <mat-form-field>
-                    <mat-label>Nazwa pliku:</mat-label>
-                    <input
-                        name="name"
-                        disabled
-                        matInput
-                        [(ngModel)]="documentService.documentConditions.Name"
-                    />
-                </mat-form-field>
-                <mat-slider
-                    (input)="onSlide($event, 3)"
-                    thumbLabel
-                    tickInterval="1"
-                    min="1"
-                    max="100"
-                    [(ngModel)]="
-                        documentService.documentConditions.InfoSearchRadius
-                    "
-                ></mat-slider>
-                <div
-                    *ngFor="
-                        let info of documentService.documentConditions.Infos;
-                        index as i
-                    "
-                >
-                    <mat-form-field>
-                        <mat-label>{{ info.Name }}</mat-label>
-                        <mat-select
-                            [(ngModel)]="info.Selected"
-                            multiple
-                            required
+                <div>
+                    <mat-label>Znalezione dane:</mat-label>
+                    <div
+                        *ngFor="
+                            let info of documentService.documentConditions.Infos
+                        "
+                    >
+                        <mat-label
+                            >{{ info.Name }}: {{ infoValue(info) }}</mat-label
                         >
-                            <mat-option
-                                *ngFor="let option of info.Nearby; index as j"
-                                [value]="j"
-                                >{{ option }}</mat-option
-                            >
-                        </mat-select>
-                    </mat-form-field>
+                    </div>
                 </div>
-            </ng-template>
+            </div>
+            <div class="page-footer">
+                <button
+                    mat-raised-button
+                    color="primary"
+                    (click)="previousStep()"
+                >
+                    Wróć
+                </button>
+                <button mat-raised-button color="primary" (click)="nextStep()">
+                    Dalej
+                </button>
+            </div>
         </div>
-        <div class="page-footer">
-            <button mat-raised-button color="primary" (click)="previousStep()">
-                Wróć
-            </button>
-            <button mat-raised-button color="primary" (click)="nextStep()">
-                Dalej
-            </button>
+    </ng-template>
+    <ng-template [ngIf]="view === 5">
+        <div class="completed">
+            <span class="material-icons"> done </span>
         </div>
-    </div>
+    </ng-template>
 </ng-template>
-
-<ng-template [ngIf]="view === 4">
-  <div class="page">
-      <div class="page-title">Krok 4: Podsumowanie</div>
-      <div class="page-content step-2">
-              <mat-form-field>
-                  <mat-label>Nazwa pliku:</mat-label>
-                  <input
-                      name="name"
-                      disabled
-                      matInput
-                      [(ngModel)]="documentService.documentConditions.Name"
-                  />
-              </mat-form-field>
-              <mat-form-field>
-                <mat-label>Nazwa dokumentu:</mat-label>
-                <input
-                    name="title"
-                    matInput
-                    [(ngModel)]="documentService.documentConditions.Title"
-                />
-            </mat-form-field>
-            <mat-label>Znalezione daty:</mat-label>
-            <div
-            *ngFor="
-                let date of documentService.documentConditions.Dates
-            "
-        >
-            <mat-label>{{ date.Name }}: {{ date.Value }}</mat-label>
-        </div>
-        <mat-label>Znalezione kwoty:</mat-label>
-        <div
-        *ngFor="
-            let amount of documentService.documentConditions.Amounts
-        "
-    >
-            <mat-label
-                >{{ amount.Gross }} zł + VAT: {{ amount.Vat }}:
-                {{ amount.Net }} zł</mat-label
-            >
+<ng-template [ngIf]="loading">
+    <div class="spinner">
+        <mat-spinner></mat-spinner>
     </div>
-    <mat-label>Znalezione dane:</mat-label>
-        <div
-        *ngFor="
-            let info of documentService.documentConditions.Infos
-        "
-    >
-            <mat-label
-                >{{info.Name}}: {{infoValue(info)}}</mat-label
-            >
-    </div>
-
-      </div>
-      <div class="page-footer">
-          <button mat-raised-button color="primary" (click)="previousStep()">
-              Wróć
-          </button>
-          <button mat-raised-button color="primary" (click)="nextStep()">
-              Dalej
-          </button>
-      </div>
-  </div>
 </ng-template>

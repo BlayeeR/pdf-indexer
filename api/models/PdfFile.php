@@ -25,6 +25,11 @@ class PdfFile
     protected string $name;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    protected bool $completed;
+
+    /**
      * @ORM\Column(type="string",nullable=true)
      */
     protected string $title;
@@ -202,5 +207,41 @@ class PdfFile
     public function setTitle(string $title): void
     {
         $this->title = $title;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCompleted(): bool
+    {
+        return $this->completed;
+    }
+
+    /**
+     * @param bool $completed
+     */
+    public function setCompleted(bool $completed): void
+    {
+        $this->completed = $completed;
+    }
+
+    public function countDates(): int {
+        return count($this->getDates());
+    }
+
+    public function countAmounts(): int {
+        return count($this->getAmounts());
+    }
+
+    public function countInfos(): int {
+        return count($this->getInfos());
+    }
+
+    public function getText(): string {
+        $ret = "";
+        foreach($this->getPages() as $page) {
+            $ret .= $page->getText() . " ";
+        }
+        return $ret;
     }
 }
