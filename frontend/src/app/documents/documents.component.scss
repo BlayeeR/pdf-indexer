@@ -1,0 +1,48 @@
+.document {
+  background: #CDE0FE;
+  border-radius: 10px;
+  margin: 20px 20px 0 20px;
+  padding-top: 1px;
+  color: #435ebe;
+
+    .document-header {
+      background: #DEEBFF;
+      border-radius: 10px;
+      padding: 10px;
+      margin: 10px;
+      display: flex;
+      align-items: center;
+
+      .document-title {
+        margin-right: auto;
+      }
+
+      > span {
+        cursor: pointer;
+      }
+    }
+
+    .document-body {
+      display: flex;
+
+      .document-body-left {
+        margin-right: 0;
+      }
+
+      .document-body-right {
+        margin-left: 0;
+      }
+
+      > div {
+        margin: 0px 10px 10px 10px;
+        width: 30%;
+        background: #DEEBFF;
+        border-radius: 10px;
+        padding: 10px;
+      }
+  }
+}
+
+:last-child.document {
+  margin-bottom: 20px;
+}

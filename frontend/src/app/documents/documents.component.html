@@ -1,1 +1,15 @@
-<p>documents works!</p>
+<div class="document" *ngFor="let document of data.documents; index as i">
+    <div class="document-header">
+      <div class="document-title">{{ document.Name }}</div>
+        <span class="material-icons" (click)="deleteDocument(document, i)"> cancel </span>
+    </div>
+    <div class="document-body">
+        <div class="document-body-left">
+            Ilość dat: {{ document.Dates.length }}
+        </div>
+        <div>Ilość kwot: {{ document.Amounts.length }}</div>
+        <div class="document-body-right">
+            Ilość danych: {{ document.Infos.length }}
+        </div>
+    </div>
+</div>

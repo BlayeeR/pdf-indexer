@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Page
 {
     /**
-     * @ORM\OneToMany(targetEntity="TextObject", mappedBy="page")
+     * @ORM\OneToMany(targetEntity="TextObject", mappedBy="page", orphanRemoval=true)
      */
     private $textObjects;
 
