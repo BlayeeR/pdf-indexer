@@ -152,8 +152,10 @@
                             "
                         >
                             <mat-label
-                                >{{ amount.Gross }} zł + VAT: {{ amount.Vat }}:
-                                {{ amount.Net }} zł</mat-label
+                                ><ng-template [ngIf]="amount.Name"
+                                    >{{ amount.Name }}: </ng-template
+                                >{{ amount.Gross }} zł +
+                                {{ amount.Vat }} VAT</mat-label
                             >
                         </div>
                     </div>
@@ -316,8 +318,10 @@
                         "
                     >
                         <mat-label
-                            >{{ amount.Gross }} zł + VAT: {{ amount.Vat }}:
-                            {{ amount.Net }} zł</mat-label
+                            ><ng-template [ngIf]="amount.Name"
+                                >{{ amount.Name }}: </ng-template
+                            >{{ amount.Gross }} zł +
+                            {{ amount.Vat }} VAT</mat-label
                         >
                     </div>
                 </div>

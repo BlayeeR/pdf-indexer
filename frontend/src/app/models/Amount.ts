@@ -1,7 +1,8 @@
 export interface Amount {
     Gross: number;
     Vat: string;
-    Net: number
+    Net: number;
+    Name: string;
 }
 
 export enum Vat {

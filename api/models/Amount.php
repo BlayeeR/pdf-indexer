@@ -30,6 +30,11 @@ class Amount
     protected int $vat;
 
     /**
+     * @ORM\Column(type="string")
+     */
+    protected string $name;
+
+    /**
      * @ORM\ManyToOne(targetEntity="PdfFile", inversedBy="amounts")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -91,5 +96,21 @@ class Amount
     public function setId(int $id): void
     {
         $this->id = $id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName(string $name): void
+    {
+        $this->name = $name;
     }
 }

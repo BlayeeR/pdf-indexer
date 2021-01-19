@@ -62,6 +62,7 @@ function findAmounts(Models\PdfFile $pdf, int $searchradius) {
 
                     $decimals = [];
                     $subText = "";
+
                     foreach ($nearbyTexts as $nearbyText) {
                         $subText .= $nearbyText->getText();
                         //sprawdzamy czy któryś obiekt sąsiadujący jest liczbą, jesli tak to dodajemy go do znalezionych liczb
@@ -77,6 +78,13 @@ function findAmounts(Models\PdfFile $pdf, int $searchradius) {
                         }
                     }
 
+                    $name = "";
+                    if (preg_match_all("/\w*[a-zA-Z]\w*/m", $subText, $nameMatches)) {
+                        foreach ($nameMatches[0] as $nameMatch) {
+                            $name .= $nameMatch . " ";
+                        }
+                    }
+
                     //iterujemy przez wszystkie znalezione wyżej liczby
                     for ($j = 0; $j < count($decimals); $j++) {
                         //sprawdzamy, czy wśród innych znalezionych liczb, znajduje się taka, która jest kwotą netto dla wybranej liczby i znalezionego podatku vat
@@ -86,7 +94,8 @@ function findAmounts(Models\PdfFile $pdf, int $searchradius) {
                             $ret = [
                                 'Gross' => number_format($decimals[$j], 2, '.', ''),
                                 'Vat' => ltrim($matches[0][$i][0], "0"),
-                                'Net' => number_format($decimals[$key], 2, '.', '')
+                                'Net' => number_format($decimals[$key], 2, '.', ''),
+                                'Name' => $name
                             ];
                         } //taka liczba nie istnieje
                         else {
@@ -97,7 +106,8 @@ function findAmounts(Models\PdfFile $pdf, int $searchradius) {
                                 $ret = [
                                     'Gross' => number_format($decimals[$key], 2, '.', ''),
                                     'Vat' => ltrim($matches[0][$i][0], "0"),
-                                    'Net' => number_format($decimals[$j], 2, '.', '')
+                                    'Net' => number_format($decimals[$j], 2, '.', ''),
+                                    'Name' => $name
                                 ];
                             }
                         }
