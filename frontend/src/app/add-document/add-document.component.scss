@@ -18,10 +18,10 @@
 }
 
 .page-content {
-    height: stretch;
     display: flex;
     justify-content: center;
     align-items: center;
+    flex: 1;
     > label > span {
         font-size: 400px;
         color: #819eea;
