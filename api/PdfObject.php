@@ -165,7 +165,7 @@ class PdfObject {
                 }
                 break;
             case PDF_OBJECT_TEXT_BLOCK:
-                if(preg_match_all("/^(?s)(.*?)(Tc|Td|TD|Tf|'|Tj|TJ|TL|Tm|Ts|Tw|Tz|T\*|Da|Do|rg|RG|re|co|cs|gs|en|sc|SC|g|G|V|vo|Vo)$/m",$this->getStrippedContent(), $matches )) {
+                if(preg_match_all("/^(?s)(.*?)(Tc|Td|TD|Tf|'|Tj|TJ|TL|Tm|Ts|Tw|Tz|T\*|Da|Do|rg|RG|re|co|cs|gs|en|sc|SC|g|G|V|vo|Vo)$/m",$this->getContent(), $matches )) {
                     for($i = 0; $i < count($matches[0]); $i++) {
                         $obj = new TextCommand($matches[0][$i], PDF_OBJECT_TEXT_COMMAND, $matches[2][$i], $matches[1][$i]);
                         array_push($this->objects, $obj);

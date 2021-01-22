@@ -119,14 +119,8 @@ class Font extends PdfObject
 
     public function translateText(TextCommand $command)
     {
-        $text = str_replace(
-            ['\\\\', '\(', '\)', '\n', '\r', '\t', '\f', '\ '],
-            ['\\', '(', ')', "\n", "\r", "\t", "\f", ' '],
-            $command->getValue()
-        );
-
+        $text = str_replace(['\\\\', '\(', '\)', '\n', '\r', '\t', '\f', '\ '],['\\', '(', ')', "\n", "\r", "\t", "\f", ' '],$command->getValue());
         $text = $this->translateContent($text);
-
         return $text;
     }
 
@@ -135,22 +129,14 @@ class Font extends PdfObject
         if ($this->toUnicode) {
             $result = '';
 
-            for ($i = 0; $i < strlen($text); $i += 1) {
-                $char = substr($text, $i, 1);
+            for ($i = 0; $i < strlen($text); $i += $this->charFrom) {
+                $char = substr($text, $i, $this->charFrom);
                 $translatedChar = $this->translateCharacter($char);
                 if ($translatedChar !== false) {
                     $char = $translatedChar;
                 }
                 else {
-                    $char = substr($text, $i, 2);
-                    $translatedChar = $this->translateCharacter($char);
-                    if ($translatedChar !== false) {
-                        $char = $translatedChar;
-                        $i += 1;
-                    }
-                    else {
-                        $char = "?";
-                    }
+                    $char = "?";
                 }
                 $result .= $char;
             }

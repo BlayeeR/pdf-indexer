@@ -13,10 +13,7 @@ class TextCommand extends PdfObject
                 $ret = "";
                 if(preg_match_all("/\((?P<text>(?s)(.*?)+)\)([-\d.]+)?/m", parent::getValue(), $matches)) {
                     foreach($matches['text'] as $match) {
-                        if(strpos($match, "\\r")) {
-                            $test = "";
-                        }
-                        $ret .= strip_tags($match);
+                        $ret .= $match;
                     }
                 }
                 return $ret;
