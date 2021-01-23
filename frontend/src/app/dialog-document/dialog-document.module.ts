@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { DialogDocumentComponent } from './dialog-document.component';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
+import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { MatIconModule } from '@angular/material/icon';
     MatInputModule,
     MatButtonModule,
     MatListModule,
-    MatIconModule
+    MatIconModule,
+    NgxExtendedPdfViewerModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   exports: [

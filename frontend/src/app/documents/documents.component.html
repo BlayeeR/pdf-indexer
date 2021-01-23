@@ -1,8 +1,15 @@
 <ng-template [ngIf]="!loading">
-    <div class="document" (click)="openDocument(document.Id)" *ngFor="let document of data.documents; index as i">
+    <div
+        class="document"
+        (click)="openDocument(document.Id)"
+        *ngFor="let document of data.documents; index as i"
+    >
         <div class="document-header">
             <div class="document-title">{{ document.Title }}</div>
-            <span class="material-icons" (click)="$event.stopPropagation();deleteDocument(document, i)">
+            <span
+                class="material-icons"
+                (click)="$event.stopPropagation(); deleteDocument(document, i)"
+            >
                 cancel
             </span>
         </div>

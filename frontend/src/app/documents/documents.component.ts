@@ -52,6 +52,8 @@ export class DocumentsComponent implements OnInit {
         this.loading = false;
         this.dialog.open(DialogDocumentComponent, {
             data: conf,
+            maxWidth: "80vh",
+            minWidth: "80vh"
         });
     }
 }

@@ -7,8 +7,6 @@ require_once '../../date.php';
 
 use PdfIndexer\Models As Models;
 
-header("Access-Control-Allow-Origin: http://localhost:4200");
-
 if(array_key_exists("fileKey", $_FILES)) {
     $fileName = $_FILES["fileKey"]["name"];
     $filePath = dirname(__FILE__)."/../../../files/" . $fileName;
@@ -29,12 +27,6 @@ if(array_key_exists("fileKey", $_FILES)) {
         if ($return) {
             http_response(400, "Wystąpił problem przy konwersji pliku");
             return;
-        }
-        try {
-            unlink($filePath);
-        }
-        catch(Exception $e) {
-
         }
 
         //dekodowanie pliku
@@ -94,7 +86,7 @@ if(array_key_exists("fileKey", $_FILES)) {
 
         $entityManager->flush();
 
-        http_response(200, "Dodano plik", [ 'Id'=>$file->getId(), 'Name'=>$file->getName()]);
+        http_response(200, "Dodano plik", json_encode([ 'Id'=>$file->getId(), 'Name'=>$file->getName()]));
     }
 }
 else {

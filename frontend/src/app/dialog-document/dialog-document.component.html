@@ -1,26 +1,48 @@
 <ng-template [ngIf]="document">
     <h2 mat-dialog-title>Dokument {{ document.Title }}</h2>
     <mat-dialog-content>
-        <h3>Daty:</h3>
-        <div *ngFor="let date of document.Dates">
-            <div>{{ date.Name }}: {{ date.Value }}</div>
+        <div class="buttons">
+            <button mat-raised-button color="primary" (click)="tab = 0">
+                Szczegóły
+            </button>
+            <button mat-raised-button color="primary" (click)="tab = 1">
+                Podgląd pliku
+            </button>
         </div>
-        <h3>Kwoty:</h3>
-        <div *ngFor="let amount of document.Amounts">
-            <div>
-                <ng-template [ngIf]="amount.Name">{{amount.Name}}: </ng-template>
-                {{ amount.Gross }} zł +
-                {{ documentService.mapVat(amount.Vat) }} VAT
+        <ng-template [ngIf]="tab === 0">
+            <h3>Daty:</h3>
+            <div *ngFor="let date of document.Dates">
+                <div>{{ date.Name }}: {{ date.Value }}</div>
             </div>
-        </div>
-        <h3>Dane:</h3>
-        <div *ngFor="let info of document.Infos">
-            <div>{{ info.Name }}: {{ info.Value }}</div>
-        </div>
-        <h3>Tekst:</h3>
-        <div>
-            {{ document.Text }}
-        </div>
+            <h3>Kwoty:</h3>
+            <div *ngFor="let amount of document.Amounts">
+                <div>
+                    <ng-template [ngIf]="amount.Name"
+                        >{{ amount.Name }}:
+                    </ng-template>
+                    {{ amount.Gross }} zł +
+                    {{ documentService.mapVat(amount.Vat) }} VAT
+                </div>
+            </div>
+            <h3>Dane:</h3>
+            <div *ngFor="let info of document.Infos">
+                <div>{{ info.Name }}: {{ info.Value }}</div>
+            </div>
+            <h3>Tekst:</h3>
+            <div>
+                {{ document.Text }}
+            </div>
+        </ng-template>
+        <ng-template [ngIf]="tab === 1">
+            <div class="viewer-container">
+                <ngx-extended-pdf-viewer
+                    [src]="url"
+                    useBrowserLocale="true"
+                    height="1000px"
+                    [pageViewMode]="'infinite-scroll'"
+                ></ngx-extended-pdf-viewer>
+            </div>
+        </ng-template>
     </mat-dialog-content>
     <mat-dialog-actions>
         <button mat-button mat-dialog-close>Zamknij</button>

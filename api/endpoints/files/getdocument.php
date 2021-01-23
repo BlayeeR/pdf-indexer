@@ -6,8 +6,6 @@ require_once '../../bootstrap.php';
 
 use PdfIndexer\Models as Models;
 
-header("Access-Control-Allow-Origin: http://localhost:4200");
-
 if(!array_key_exists("id", $_GET)) {
     http_response(400, "Niepoprawne parametry żądania");
     return;
@@ -36,4 +34,4 @@ function mapDocument(\PdfIndexer\Models\PdfFile $file) {
     return ['Id'=>$file->getId(), 'Name'=>$file->getName(), 'Title'=>$file->getTitle(), 'Text'=>$file->getText(), 'Dates'=> array_map("mapDate", $file->getDates()->toArray()), 'Amounts'=>array_map("mapAmount", $file->getAmounts()->toArray()), 'Infos'=>array_map("mapInfo", $file->getInfos()->toArray())];
 }
 
-http_response(200, "Ok", array_map("mapDocument", array($file))[0]);
+http_response(200, "Ok", json_encode(array_map("mapDocument", array($file))[0]));

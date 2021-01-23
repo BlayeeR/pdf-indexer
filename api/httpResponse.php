@@ -8,5 +8,5 @@ function http_response(int $code, string $msg, mixed $body = null) {
         $protocol = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0';
         header($protocol.' '.$code.' '.$msg);
     }
-    echo json_encode($body);
+    echo $body;
 }

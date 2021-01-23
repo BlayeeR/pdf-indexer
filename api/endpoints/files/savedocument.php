@@ -6,9 +6,6 @@ require_once '../../info.php';
 require_once '../../date.php';
 require_once '../../amount.php';
 
-header("Access-Control-Allow-Origin: http://localhost:4200");
-header("Access-Control-Allow-Methods: POST, OPTIONS");
-
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     return;
@@ -121,4 +118,4 @@ function mapDocument(\PdfIndexer\Models\PdfFile $file) {
     return ['Id'=>$file->getId(), 'Name'=>$file->getName(), 'Dates'=> array_map("mapDate", $file->getDates()->toArray()), 'Amounts'=>array_map("mapAmount", $file->getAmounts()->toArray()), 'Infos'=>array_map("mapInfo", $file->getInfos()->toArray())];
 }
 
-http_response(200, "Ok", mapDocument($file));
+http_response(200, "Ok", json_encode(mapDocument($file)));

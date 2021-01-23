@@ -6,11 +6,6 @@ require_once '../../bootstrap.php';
 
 use PdfIndexer\Models as Models;
 
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    return;
-}
-
 if(!array_key_exists("id", $_GET)) {
     http_response(400, "Niepoprawne parametry żądania");
     return;
@@ -23,14 +18,8 @@ if(is_null($file)) {
     return;
 }
 
+$filePath = dirname(__FILE__)."/../../../files/" . $file->getName() . ".pdf";
 
-try {
-    $entityManager->remove($file);
-    $entityManager->flush();
-}
-catch(Exception $e) {
+header("Content-Type: application/pdf");
 
-}
-
-
-http_response(200, "Ok", json_encode("Pomyślnie usunięto plik"));
+http_response(200, "Ok", file_get_contents($filePath, FILE_BINARY));
