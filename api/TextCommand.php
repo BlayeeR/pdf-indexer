@@ -11,7 +11,7 @@ class TextCommand extends PdfObject
         switch($this->getName()){
             case "TJ": {
                 $ret = "";
-                if(preg_match_all("/\((?P<text>(?s)(.*?)+)\)([-\d.]+)?/m", parent::getValue(), $matches)) {
+                if(preg_match_all("/\((?P<text>(?s)(.*?)+)(?<!\\\)\)([-\d.]+)?/m", parent::getValue(), $matches)) {
                     foreach($matches['text'] as $match) {
                         $ret .= $match;
                     }
